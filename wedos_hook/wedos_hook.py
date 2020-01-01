@@ -38,7 +38,6 @@ wapi: Wapi
 def test(domain: str, name: str):
     logging.info('Pinging API to make sure basic functionality works')
     wapi.ping()
-    exit(66)
 
     name = ('_test-challenge.' + name).rstrip('.')
     data_prefix = '_TEST-CHALLENGE.'
