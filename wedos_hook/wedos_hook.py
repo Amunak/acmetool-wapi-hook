@@ -232,6 +232,9 @@ def get_arg_parser() -> argparse.ArgumentParser:
 def main():
     global wapi
 
+    # Read config
+    config = read_config()
+
     # Parse args
     arg_parser = get_arg_parser()
     args = arg_parser.parse_args()
@@ -257,8 +260,7 @@ def main():
         else:
             logging.info(info_prefix + f'SUBDOMAIN {extract_result.subdomain})')
 
-    # Read config and initialize Wapi
-    config = read_config()
+    # Initialize Wapi
     logging.info(f'Using account "{config["wapi"]["username"]}"')
     wapi = Wapi(config['wapi']['username'], config['wapi']['password_sha1'])
 
