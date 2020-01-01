@@ -24,3 +24,19 @@ and modify the variables there
 into your AcmeTool Hooks directory (run `sudo acmetool status` to find its location)
 0. *Optionally* test that the script itself works by running it manually with `./wedos_hook.sh test`
 (try `./wedos_hook.sh --help` for more)
+
+
+## Example output of the `test` command
+
+```text
+root@example:/etc/acme/wedos_hook# /etc/acme/hooks/wedos_hook.sh test -v example.cz
+INFO:root:Domain "example.cz" extracted as example.cz (TLD cz, NO SUBDOMAIN)
+INFO:root:Using account "root@example.cz"
+INFO:root:Pinging API to make sure basic functionality works
+INFO:root:Creating record
+INFO:root:Checking for DNS record propagation for a maximum of 360 tries with 10s delays (for a total of 3600 seconds)
+INFO:root:Match found after 14 tries (130 seconds)
+INFO:root:Looking up records for deletion
+INFO:root:Deleting row IDs: 1200
+INFO:root:Test success
+```
