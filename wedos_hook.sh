@@ -23,7 +23,9 @@ fi
 script_path=$("${realpath}" "$0")
 script_dir=$("${dirname}" "$script_path")
 
-if [ -f '/usr/bin/pipenv' ]; then
+if [ -f '/usr/local/bin/pipenv' ]; then
+    pipenv="/usr/local/bin/pipenv"
+else if [ -f '/usr/bin/pipenv' ]; then
     pipenv="/usr/bin/pipenv"
 else if [ -f '/bin/pipenv' ]; then
     pipenv="/bin/pipenv"
@@ -31,9 +33,10 @@ else
     echo 'Failed to locate Pipenv executable'
     echo ''
     echo 'Do you have Pipenv installed?'
-    echo 'Try running `pip install pipenv` or read the documentation at'
+    echo 'Try running `pip install pipenv`, `python3 -m pip install pipenv` or read the documentation at'
     echo 'https://pypi.org/project/pipenv/'
     exit 32
+fi
 fi
 fi
 
