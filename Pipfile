@@ -14,4 +14,4 @@ dnspython = "~=1.16"
 python_version = "3.7"
 
 [scripts]
-wedos_hook = "python -m wedos_hook"
+wedos_hook = "python -m wedos_hook.wedos_hook"
