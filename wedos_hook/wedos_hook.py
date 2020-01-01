@@ -200,8 +200,8 @@ def read_config() -> dict:
 
 def get_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description='AcmeTool dns-01 validation hook for Wedos API (WAPI)',
-        epilog=f'Read {DOC_LINK} for more information about AcmeTool Hooks\n',
+        description='AcmeTool DNS-01 validation hook for Wedos API (WAPI)',
+        epilog=f'Read {DOC_LINK}for more information about AcmeTool Hooks\n',
     )
     parser.add_argument('--verbose', '-v', action='count', default=0, help='log verbosity; use multiple times for higher')
     subparsers = parser.add_subparsers(title='Actions', dest='action', description='Hook actions; pick one and call it with --help for more help')
@@ -233,7 +233,8 @@ def main():
     global wapi
 
     # Parse args
-    args = get_arg_parser().parse_args()
+    arg_parser = get_arg_parser()
+    args = arg_parser.parse_args()
     if args.verbose >= 2:
         loglevel = logging.DEBUG
     elif args.verbose >= 1:
@@ -241,6 +242,11 @@ def main():
     else:
         loglevel = logging.WARNING
     logging.basicConfig(level=loglevel)
+
+    # In case no arguments / action is specified, exit
+    if 'action' not in args or args.action is None:
+        arg_parser.print_help()
+        sys.exit(3)
 
     # Extract domain/subdomain
     if 'domain' in args:
