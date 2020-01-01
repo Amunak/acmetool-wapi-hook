@@ -65,6 +65,8 @@ def test(domain: str, name: str):
 
 
 def challenge_start(domain: str, name: str, data: str):
+    name = ('_acme-challenge.' + name).rstrip('.')
+
     logging.info('Creating record')
     wapi.dns_row_add(domain, name, data, 'AcmeTool Wedos Hook')
     wapi.dns_domain_commit(domain)
@@ -80,6 +82,8 @@ def challenge_start(domain: str, name: str, data: str):
 
 
 def challenge_stop(domain: str, name: str, data: str):
+    name = ('_acme-challenge.' + name).rstrip('.')
+
     ids_to_delete = find_row_ids_for_delete(domain, name, lambda record_data: record_data == data)
     result = do_delete(domain, ids_to_delete)
 
