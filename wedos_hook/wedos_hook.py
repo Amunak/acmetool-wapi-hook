@@ -149,8 +149,11 @@ def wait_for_record_propagation(domain: str, name: str, data: str) -> bool:
     while tries <= PROPAGATION_MAX_RETRIES and (has_propagated is None or not has_propagated):
         logging.debug(f'Checking whether record propagated (try {tries} of {PROPAGATION_MAX_RETRIES})')
 
-        answer = my_resolver.query(full_name, wapi.default_dns_record_type)
-        has_propagated = record_has_propagated(answer, data)
+        try:
+            answer = my_resolver.query(full_name, wapi.default_dns_record_type)
+            has_propagated = record_has_propagated(answer, data)
+        except resolver.NoAnswer:
+            has_propagated = False
 
         if not has_propagated:
             tries += 1
