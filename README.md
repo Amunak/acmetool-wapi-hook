@@ -28,8 +28,14 @@ into your AcmeTool Hooks directory (run `sudo acmetool status` to find its locat
 
 ## Example output of the `test` command
 
+The test command tries all the steps the script does otherwise in one go,
+creating a TXT record at `_test-challenge.<your-domain>` with the API, then checking that it propagates
+to outside nameservers, and finally deletes this record.
+
+If it finishes successfully you can be reasonably sure that the script works.
+
 ```text
-root@example:/etc/acme/wedos_hook# /etc/acme/hooks/wedos_hook.sh test -v example.cz
+root@example:~# /etc/acme/hooks/wedos_hook.sh test -v example.cz
 INFO:root:Domain "example.cz" extracted as example.cz (TLD cz, NO SUBDOMAIN)
 INFO:root:Using account "root@example.cz"
 INFO:root:Pinging API to make sure basic functionality works
