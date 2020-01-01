@@ -3,3 +3,7 @@
 username = user@example.com
 # WEDOS API password SHA1 hash (obtain by running `import hashlib; print(hashlib.sha1("Your Password".encode('utf8')).hexdigest())`)
 password_sha1 = 49764acfa3e8d3116bca19e1483bef39f02e04ea
+
+[hook]
+# Override verbosity level - 0 is standard (warnings and higher), 1 is INFO, 2 is DEBUG
+override_verbosity=0

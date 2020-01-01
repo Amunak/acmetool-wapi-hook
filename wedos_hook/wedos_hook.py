@@ -195,6 +195,9 @@ def read_config() -> dict:
             'username': parser.get('wapi', 'username'),
             'password_sha1': parser.get('wapi', 'password_sha1'),
         },
+        'hook': {
+            'verbosity': max(0, min(10, parser.getint('hook', 'override_verbosity', fallback=0))),
+        },
     }
 
 
@@ -238,13 +241,16 @@ def main():
     # Parse args
     arg_parser = get_arg_parser()
     args = arg_parser.parse_args()
-    if args.verbose >= 2:
+    verbosity = max(args.verbose, config['hook']['verbosity'])
+    if verbosity >= 2:
         loglevel = logging.DEBUG
-    elif args.verbose >= 1:
+    elif verbosity >= 1:
         loglevel = logging.INFO
     else:
         loglevel = logging.WARNING
     logging.basicConfig(level=loglevel)
+
+    logging.debug(args)
 
     # In case no arguments / action is specified, exit
     if 'action' not in args or args.action is None:
