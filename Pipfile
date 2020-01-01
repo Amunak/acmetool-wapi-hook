@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "~=2.22"
+tldextract = "~=2.2"
+dnspython = "~=1.16"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+wedos_hook = "python -m wedos_hook"

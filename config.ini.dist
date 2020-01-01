@@ -1,0 +1,5 @@
+[wapi]
+# WEDOS username
+username = user@example.com
+# WEDOS API password SHA1 hash (obtain by running `import hashlib; print(hashlib.sha1("Your Password".encode('utf8')).hexdigest())`)
+password_sha1 = 49764acfa3e8d3116bca19e1483bef39f02e04ea

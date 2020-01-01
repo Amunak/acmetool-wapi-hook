@@ -1,0 +1,12 @@
+# Configuration
+/config.ini
+
+# This project is intended to be as compatible as possible, and as such it's almost a library
+# Therefore we don't commit Pipfile.lock; semantic versioning in Pipfile should be sufficient.
+/Pipfile.lock
+
+# IDE project data
+/.idea/
+
+# Compiled python modules
+*.pyc
