@@ -29,8 +29,10 @@ NAMESERVERS = ['1.1.1.1', '8.8.8.8']
 DOC_LINK = 'https://github.com/hlandau/acmetool/blob/master/_doc/SCHEMA.md#challenge-dns-start-challenge-dns-stop'
 
 OPT_TEST = 'test'
-OPT_CHALLENGE_STOP = 'challenge-dns-stop'
-OPT_CHALLENGE_START = 'challenge-dns-start'
+OPT_DNS_CHALLENGE_STOP = 'challenge-dns-stop'
+OPT_DNS_CHALLENGE_START = 'challenge-dns-start'
+OPT_HTTP_CHALLENGE_START = 'challenge-http-start'
+OPT_HTTP_CHALLENGE_STOP = 'challenge-http-stop'
 
 wapi: Wapi
 
@@ -208,17 +210,21 @@ def get_arg_parser() -> argparse.ArgumentParser:
     test_parser.add_argument('--verbose', '-v', action='count', default=0, help='log verbosity; use multiple times for higher')
     test_parser.add_argument('domain', type=str)
 
-    start_parser = subparsers.add_parser(OPT_CHALLENGE_START, help='hook action used before the challenge')
+    start_parser = subparsers.add_parser(OPT_DNS_CHALLENGE_START, help='hook action used before the challenge')
     start_parser.add_argument('--verbose', '-v', action='count', default=0, help='log verbosity; use multiple times for higher')
     start_parser.add_argument('domain', type=str)
     start_parser.add_argument('file', help='not used, passed here by AcmeTool')
     start_parser.add_argument('record', type=str, help='the TXT record')
 
-    stop_parser = subparsers.add_parser(OPT_CHALLENGE_STOP, help='hook action used after the challenge')
+    stop_parser = subparsers.add_parser(OPT_DNS_CHALLENGE_STOP, help='hook action used after the challenge')
     stop_parser.add_argument('--verbose', '-v', action='count', default=0, help='log verbosity; use multiple times for higher')
     stop_parser.add_argument('domain', type=str)
     stop_parser.add_argument('file', help='not used, passed here by AcmeTool')
     stop_parser.add_argument('record', type=str, help='the TXT record')
+
+    # additional parsers that run a dummy function so that there are no errors in AcmeTool output
+    subparsers.add_parser(OPT_HTTP_CHALLENGE_START, help='dummy hook action').add_argument('dummy', nargs=3)
+    subparsers.add_parser(OPT_HTTP_CHALLENGE_STOP, help='dummy hook action').add_argument('dummy', nargs=3)
 
     return parser
 
@@ -236,13 +242,14 @@ def main():
         loglevel = logging.WARNING
     logging.basicConfig(level=loglevel)
 
-    # Exctract domain/subdomain
-    extract_result = tldextract.extract(args.domain)
-    info_prefix = f'Domain "{args.domain}" extracted as {extract_result.registered_domain} (TLD {extract_result.suffix}, '
-    if extract_result.subdomain == '':
-        logging.info(info_prefix + 'NO SUBDOMAIN)')
-    else:
-        logging.info(info_prefix + f'SUBDOMAIN {extract_result.subdomain})')
+    # Extract domain/subdomain
+    if 'domain' in args:
+        extract_result = tldextract.extract(args.domain)
+        info_prefix = f'Domain "{args.domain}" extracted as {extract_result.registered_domain} (TLD {extract_result.suffix}, '
+        if extract_result.subdomain == '':
+            logging.info(info_prefix + 'NO SUBDOMAIN)')
+        else:
+            logging.info(info_prefix + f'SUBDOMAIN {extract_result.subdomain})')
 
     # Read config and initialize Wapi
     config = read_config()
@@ -252,14 +259,20 @@ def main():
     # Finally decide what to do and run the given function
     {
         OPT_TEST: lambda: test(extract_result.registered_domain, extract_result.subdomain),
-        OPT_CHALLENGE_START: lambda: challenge_start(extract_result.registered_domain, extract_result.subdomain, args.record),
-        OPT_CHALLENGE_STOP: lambda: challenge_stop(extract_result.registered_domain, extract_result.subdomain, args.record),
+        OPT_DNS_CHALLENGE_START: lambda: challenge_start(extract_result.registered_domain, extract_result.subdomain, args.record),
+        OPT_DNS_CHALLENGE_STOP: lambda: challenge_stop(extract_result.registered_domain, extract_result.subdomain, args.record),
+        OPT_HTTP_CHALLENGE_START: lambda: exit_not_implemented(),
+        OPT_HTTP_CHALLENGE_STOP: lambda: exit_not_implemented(),
     }[args.action]()
 
     # Commands should exit by themselves - if they don't, we return with error here
     logging.error('Subcommand did not exit on its own.')
     sys.exit(255)
 
+
+def exit_not_implemented():
+    logging.debug('Not implemented.')
+    sys.exit(4)
 
 if __name__ == '__main__':
     main()
