@@ -4,6 +4,7 @@ This is an [AcmeTool](https://github.com/hlandau/acmetool) hook for
 [Wedos](https://www.wedos.com/)'s API (WAPI) for the
 [DNS-01 ACME challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge).
 
+It aims to support regular challenges (although there are faster/better verification methods for those) as well as **wildcard certificate** verification, including ones for subdomains (to be fair there's really no difference to regular challenges, but whatever).
 
 ## Requirements
 
