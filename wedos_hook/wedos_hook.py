@@ -152,7 +152,7 @@ def wait_for_record_propagation(domain: str, name: str, data: str) -> bool:
         try:
             answer = my_resolver.query(full_name, wapi.default_dns_record_type)
             has_propagated = record_has_propagated(answer, data)
-        except resolver.NoAnswer:
+        except (resolver.NoAnswer, resolver.NXDOMAIN):
             has_propagated = False
 
         if not has_propagated:
