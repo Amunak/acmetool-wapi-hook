@@ -33,6 +33,7 @@ OPT_DNS_CHALLENGE_STOP = 'challenge-dns-stop'
 OPT_DNS_CHALLENGE_START = 'challenge-dns-start'
 OPT_HTTP_CHALLENGE_START = 'challenge-http-start'
 OPT_HTTP_CHALLENGE_STOP = 'challenge-http-stop'
+OPT_LIVE_UPDATED = 'live-updated'
 
 wapi: Wapi
 
@@ -231,6 +232,7 @@ def get_arg_parser() -> argparse.ArgumentParser:
     # additional parsers that run a dummy function so that there are no errors in AcmeTool output
     subparsers.add_parser(OPT_HTTP_CHALLENGE_START, help='dummy hook action').add_argument('dummy', nargs=3)
     subparsers.add_parser(OPT_HTTP_CHALLENGE_STOP, help='dummy hook action').add_argument('dummy', nargs=3)
+    subparsers.add_parser(OPT_LIVE_UPDATED, help='dummy hook action')
 
     return parser
 
@@ -280,6 +282,7 @@ def main():
         OPT_DNS_CHALLENGE_STOP: lambda: challenge_stop(extract_result.registered_domain, extract_result.subdomain, args.record),
         OPT_HTTP_CHALLENGE_START: lambda: exit_not_implemented(),
         OPT_HTTP_CHALLENGE_STOP: lambda: exit_not_implemented(),
+        OPT_LIVE_UPDATED: lambda: exit_not_implemented(),
     }[args.action]()
 
     # Commands should exit by themselves - if they don't, we return with error here
